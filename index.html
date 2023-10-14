@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <main>
+            <div class="header">
+                <div class="container">
+                    <h1>Find your film</h1>
+                    <button id="watchlist-toggle">Watch list</button>
+                    <button id="search-toggle" class="hidden">Search</button>
+                </div>
+                <div>
+                    <form id="search-movie">
+                        <label for="search">Find Film:</label>
+                        <input type="text" name="search" id="search">
+                        <button>Search</button>
+                    </form>
+                </div>
+                <h1>Movie Watch List</h1>
+                <div id="results" class="container-col">
+                </div>
+                <div id="watchlist" class="container-col"></div>
+            </div>
+            <script src="index.js"></script>
+            <div id="item"></div>
+        </main>
+    </body>
+</html>
