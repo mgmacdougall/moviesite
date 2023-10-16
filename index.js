@@ -1,57 +1,42 @@
+import {APIKEY} from './config.js';
+
 const searchEl = document.getElementById('search-movie');
 const searchResults = [];
+
 let resultsEl = document.getElementById('results');
 
 let watchListResultsEl = document.getElementById('watchlist');
 const watchListArray = [];
 
-const watchListToggleEL = document.getElementById('watchlist-toggle');
+const watchListToggleEl = document.getElementById('watchlist-toggle');
 const searchPageToggleEl = document.getElementById('search-toggle');
 
 const getAverageRating = ratings => {
   return ratings[0].Value.split('/').shift();
 };
 
+let moviesArray = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!localStorage.getItem('movies')) {
+    console.log('');
+  } else {
+    let t = JSON.parse(localStorage.getItem('movies'));
+    moviesArray = t.toWatch;
+  }
+});
+
 document.getElementById('results').addEventListener('click', function(e) {
   let movieId =
     e.target.parentElement.parentElement.parentElement.parentElement.id;
-  let movieDetails = document.getElementById(movieId);
-  watchListArray.push({id: movieId, html: movieDetails});
-});
-
-///// This is where stopped - need to figure out how to control the 
-//// search/watch toggle functionality - maybe revist with another page with link
-watchListToggleEL.addEventListener('click', function(e) {
-  console.log(watchListArray);
-
-  // Attempting to just change the inner text
-    /// basically if the button is watchlist - then render the watchilst page and hide the
-    // the results - usings the watchlistarray
-    // if this the the search then just empty rerender the page. with results
-  watchListToggleEL.innerText === 'search'
-    ? watchListToggleEL.innerText === 'Watch list'
-    : (watchListToggleEL.innerText = 'Search');
-
-  resultsEl.innerHTML = null;
-  watchListArray.forEach(element => {
-    watchListResultsEl.append(element.html);
+  fetchMovieById(movieId).then(data => {
+    moviesArray.push(JSON.stringify(data));
+    localStorage.setItem(`movies`, JSON.stringify({toWatch: moviesArray}));
   });
 });
 
 const buildCard = movie => {
-  console.log('inbuild card', movie);
-
-  const {
-    Poster,
-    Title,
-    Type,
-    Plot,
-    Runtime,
-    Genre,
-    Year,
-    Ratings,
-    imdbID
-  } = movie;
+  const {Poster, Title, Plot, Runtime, Genre, Ratings, imdbID} = movie;
   let resultsEl = document.getElementById('results');
 
   Plot.split('').splice(0, 100).join('', ',') + '...';
@@ -70,7 +55,7 @@ const buildCard = movie => {
     <div>
       <span>${Runtime}</span>
       <span>${Genre}</span>
-      <button>Add to watchlist</button>
+      <i class="bi bi-patch-plus-fill"></i>
     </div>
     `;
   let movieDetails = document.createElement('p');
@@ -91,18 +76,27 @@ const buildCard = movie => {
   resultsEl.appendChild(cardContainer);
 };
 
+const fetchMovieById = async id => {
+  console.log(id);
+  const results = await fetch(
+    `http://www.omdbapi.com/?apikey=${APIKEY}&i=${id}`
+  );
+  const movieInfo = await results.json();
+  return movieInfo;
+};
+
 const fetchMovieByQuery = async query => {
   const {title} = query;
   const searchResults = await fetch(
-    `http://www.omdbapi.com/?apikey=a2e1d496&s=${title}&plot=full`
+    `http://www.omdbapi.com/?apikey=${APIKEY}&s=${title}&plot=full`
   );
 
   const movies = await searchResults.json();
   const {Search} = movies;
 
-  searchResult = Search.map(element => {
+  Search.map(element => {
     fetch(
-      `http://www.omdbapi.com/?apikey=a2e1d496&t=${element.Title}&plot=full`
+      `http://www.omdbapi.com/?apikey=${APIKEY}&t=${element.Title}&plot=full`
     )
       .then(result => result.json())
       .then(data => buildCard(data));
