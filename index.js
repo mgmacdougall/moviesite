@@ -1,16 +1,10 @@
 import {APIKEY} from './config.js';
 
 const searchEl = document.getElementById('search-movie');
-const searchResults = [];
 
 let resultsEl = document.getElementById('results');
 
-let watchListResultsEl = document.getElementById('watchlist');
-const watchListArray = [];
-
-const watchListToggleEl = document.getElementById('watchlist-toggle');
-const searchPageToggleEl = document.getElementById('search-toggle');
-
+let resultCount = 0;
 const getAverageRating = ratings => {
   return ratings[0].Value.split('/').shift();
 };
@@ -36,6 +30,8 @@ document.getElementById('results').addEventListener('click', function(e) {
 });
 
 const buildCard = movie => {
+  if (resultCount == 2) return;
+  resultCount++;
   const {Poster, Title, Plot, Runtime, Genre, Ratings, imdbID} = movie;
   let resultsEl = document.getElementById('results');
 
@@ -88,13 +84,13 @@ const fetchMovieById = async id => {
 const fetchMovieByQuery = async query => {
   const {title} = query;
   const searchResults = await fetch(
-    `http://www.omdbapi.com/?apikey=${APIKEY}&s=${title}&plot=full`
+    `http://www.omdbapi.com/?apikey=${APIKEY}&s=${title}&plot=full&page=1`
   );
 
   const movies = await searchResults.json();
   const {Search} = movies;
 
-  Search.map(element => {
+  Search.map((element, idx) => {
     fetch(
       `http://www.omdbapi.com/?apikey=${APIKEY}&t=${element.Title}&plot=full`
     )
@@ -106,7 +102,7 @@ const fetchMovieByQuery = async query => {
 searchEl.addEventListener('submit', e => {
   e.preventDefault();
   resultsEl.innerHTML = null;
-
+  resultCount = 0;
   const searchData = {title: e.target[0].value};
   fetchMovieByQuery(searchData);
 });

@@ -1,8 +1,10 @@
 const getAverageRating = ratings => {
   return ratings[0].Value.split('/').shift();
 };
-
+let storageCount = 0;
 const buildCard = movie => {
+  if (storageCount == 2) return;
+  storageCount++;
   const {Poster, Title, Plot, Runtime, Genre, Ratings, imdbID} = movie;
   let resultsEl = document.getElementById('results');
 
@@ -46,5 +48,6 @@ const buildCard = movie => {
 document.addEventListener('DOMContentLoaded', () => {
   let moviesToWatch = localStorage.getItem('movies');
   const {toWatch} = JSON.parse(moviesToWatch);
+  resultCount = 0;
   toWatch.map(movieToWatch => buildCard(JSON.parse(movieToWatch)));
 });

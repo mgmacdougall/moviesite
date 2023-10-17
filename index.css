@@ -3,37 +3,54 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
+    display: flex;
+
 }
 
 h1 {
     line-height: 23px;
     font-weight: 800;
+    color: white;
 }
 
 a {
     text-decoration: none;
+
 }
 
 body {
-    max-width: 550px;
-    max-height: 780px;
     margin-left: auto;
     margin-right: auto;
-
+    flex-grow: 1;
 }
 
 main {
     width: 550px;
-    height: 780px;
+    height: 750px;
     margin-left: auto;
     margin-right: auto;
+
+}
+
+.background-image {
+    background: #000 center/cover url("/imgs/background.jpg") no-repeat;
+}
+
+.results-container {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    width: 530px;
+    height: 625px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-grow: 1;
 }
 
 .header {
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 
 .container {
@@ -57,19 +74,20 @@ main {
 .container>a {
     align-self: center;
     padding-left: 10px;
-    color: black;
+    color: white;
+    text-shadow: 1em whitesmoke;
     width: 114px;
     text-align: right;
 }
 
 .spacer {
-    height: 30px;
+    padding: 20px;
 }
 
 #search-container {
     width: 460px;
     height: 40px;
-    border: 1px solid black;
+    border: 1px solid white;
     position: absolute;
     top: 55;
     display: flex;
@@ -79,6 +97,8 @@ main {
 #search-container button {
     float: right;
     border-radius: 0px 6px 6px 0px;
+    color: whitesmoke;
+    background-color: #374151;
 }
 
 #search-movie {
